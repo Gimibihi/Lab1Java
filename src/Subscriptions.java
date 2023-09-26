@@ -59,9 +59,7 @@ class Subscriptions
      */
     public int StringLenght()
     {
-        int len = 0;
-        len = ToString().length();
-        return len;
+        return ToString().length();
     }
 
     /**
@@ -129,8 +127,7 @@ class Subscriptions
      */
     public boolean Equals(String publi, int month)
     {
-        int p = 1;
-        int[] months = new int[12];
+        int[] months;
         months = Months();
         for (int i = 0; i < months.length; i++)
         {
