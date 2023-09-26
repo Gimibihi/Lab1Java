@@ -102,8 +102,9 @@ public class Gui extends JFrame{
         calculateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                long starTime = System.currentTimeMillis();
+                long startTime = System.currentTimeMillis();
                 FormSubscriberArray(contSubscrip, publication, month,  subscribers);
+                long endTimeSubs = System.currentTimeMillis();
                 Contraction(contSubscrip, contPubli);
                 FormProfitMonth(contPubli,  profitMonth);
                 FormBelowAverage(contPubli,  contPubliNew);
@@ -114,8 +115,9 @@ public class Gui extends JFrame{
                 PrintBelowAverage(contPubliNew);
                 long endTimePrint = System.currentTimeMillis();
                 long endTime = System.currentTimeMillis();
-                System.out.println("Skaičiavimo dalies laikas: "+(endTimePrint-startTimePrint));
-                System.out.println("Skaičiavimo dalies laikas: "+(endTime-starTime));
+                System.out.println("Saraso formavimo dalies laikas: "+(endTimeSubs-startTime));
+                System.out.println("Spausdinimo dalies laikas: "+(endTimePrint-startTimePrint));
+                System.out.println("Skaičiavimo dalies laikas: "+(endTime-startTime));
             }
         });
     }
