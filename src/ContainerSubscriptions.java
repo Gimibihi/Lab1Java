@@ -3,7 +3,7 @@
  */
 class ContainerSubscriptions
 {
-    final int CMax = 10000;
+    final int CMax = 100000;
     private Subscriptions[] subscriptions;
     private int amount;
     /**

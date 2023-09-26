@@ -60,7 +60,7 @@ public class Gui extends JFrame{
      */
     public Gui(int month, String publication){
 
-        String[] profitMonth = new String[10000];
+        String[] profitMonth = new String[100000];
         ArrayList subscribers = new ArrayList();
 
         ContainerSubscriptions contSubscrip = new ContainerSubscriptions();
@@ -77,6 +77,7 @@ public class Gui extends JFrame{
 
         inputButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                long starTime = System.currentTimeMillis();
                 try {
                     Read(CFd,contSubscrip);
                 } catch (FileNotFoundException ex) {
@@ -84,26 +85,37 @@ public class Gui extends JFrame{
                 }
                 PrintOriginal(contSubscrip);
                 if (contSubscrip.Take() <= 0) { System.out.println("Nėra pradinių duomenų"); return; }
+                long endTime = System.currentTimeMillis();
+                System.out.println("Įvedimo dalies laikas: "+(endTime-starTime));
             }
         });
         sortButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                long starTime = System.currentTimeMillis();
                 contPubli.Sort();
                 PrintGrossProfit(contPubli);
+                long endTime = System.currentTimeMillis();
+                System.out.println("Rikiavimo dalies laikas: "+(endTime-starTime));
             }
         });
         calculateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                long starTime = System.currentTimeMillis();
                 FormSubscriberArray(contSubscrip, publication, month,  subscribers);
                 Contraction(contSubscrip, contPubli);
                 FormProfitMonth(contPubli,  profitMonth);
                 FormBelowAverage(contPubli,  contPubliNew);
+                long startTimePrint = System.currentTimeMillis();
                 PrintSearchArray(subscribers);
                 PrintMaxMonth(profitMonth);
                 PrintGrossProfit(contPubli);
                 PrintBelowAverage(contPubliNew);
+                long endTimePrint = System.currentTimeMillis();
+                long endTime = System.currentTimeMillis();
+                System.out.println("Skaičiavimo dalies laikas: "+(endTimePrint-startTimePrint));
+                System.out.println("Skaičiavimo dalies laikas: "+(endTime-starTime));
             }
         });
     }

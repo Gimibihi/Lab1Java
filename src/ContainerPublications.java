@@ -3,7 +3,7 @@
  */
 class ContainerPublications
 {
-    final int CMax = 10000;
+    final int CMax = 100000;
     private int amount;
     private Publication[] publication;
     /**
