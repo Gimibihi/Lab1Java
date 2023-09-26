@@ -1,46 +1,49 @@
+/**
+ * Klase publikaciju konteineriui
+ */
 class ContainerPublications
 {
     final int CMax = 10000;
     private int amount;
     private Publication[] publication;
-    /// <summary>
-    /// sukuria konstruktorių
-    /// </summary>
+    /**
+     * sukuria konstruktorių
+     */
     public ContainerPublications()
     {
         publication = new Publication[CMax];
         amount = 0;
     }
-    /// <summary>
-    /// Leidžia įvesti duomenis į konteinerį
-    /// </summary>
-    /// <param name="ob">objektas laikinas</param>
+    /**
+     * Leidžia įvesti duomenis į konteinerį
+     * @param ob objektas laikinas
+     */
     public void Insert(Publication ob) { publication[amount++] = ob; }
-    /// <summary>
-    /// Leidžia papildyti obektą konteineryje
-    /// </summary>
-    /// <param name="i">indeksas</param>
-    /// <param name="start">periodo pradžia</param>
-    /// <param name="length">periodo ilgis</param>
-    /// <param name="price">kaina</param>
+    /**
+     * Leidžia papildyti obektą konteineryje
+     * @param i indeksas
+     * @param start periodo pradžia
+     * @param length periodo ilgis
+     * @param price kaina
+     */
     public void Insert_j(int i, int start, int length, double price)
     {
         publication[i].Insert(price, start, length);
     }
-    /// <summary>
-    /// Paima kiekį
-    /// </summary>
-    /// <returns>kiekis</returns>
+    /**
+     * Paima kiekį
+     * @return kiekis
+     */
     public int Take() { return amount; }
-    /// <summary>
-    /// Paima publikaciją
-    /// </summary>
-    /// <param name="i">indeksas</param>
-    /// <returns>publikaciją</returns>
+    /**
+     * Paima publikaciją
+     * @param i indeksas
+     * @return publikaciją
+     */
     public Publication Take(int i) { return publication[i]; }
-    /// <summary>
-    /// Rikevimo metodas
-    /// </summary>
+    /**
+     * Rikiavimo metodas
+     */
     public void Sort()
     {
         for (int i = 0; i < amount - 1; i++)

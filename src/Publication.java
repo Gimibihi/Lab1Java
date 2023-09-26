@@ -1,22 +1,26 @@
+/**
+ * Klasė naudojama saugoti publikacijoms
+ */
 class Publication
 {
     private String name;
     private double[] profit;
-    /// <summary>
-    /// Sukuria konstruktorių
-    /// </summary>
+
+    /**
+     * Sukuria konstruktorių
+     */
     public Publication()
     {
         name = "";
         profit = new double[12];
     }
-    /// <summary>
-    /// Leidžia įvesti duomenis į klasę
-    /// </summary>
-    /// <param name="name">Publikacijos pavadinimas</param>
-    /// <param name="price">kaina publikacijos</param>
-    /// <param name="start">pradžia</param>
-    /// <param name="length">ilgis periodo</param>
+    /**
+     * Leidžia įvesti duomenis į klasę
+     * @param name Publikacijos pavadinimas
+     * @param price kaina publikacijos
+     * @param start pradžia
+     * @param length ilgis periodo
+     */
     public void Insert(String name, double price, int start, int length)
     {
         this.name = name;
@@ -37,12 +41,12 @@ class Publication
             }
         }
     }
-    /// <summary>
-    /// Leidžia papildyti kalsę
-    /// </summary>
-    /// <param name="price">Kaina</param>
-    /// <param name="start">periodo pradžia</param>
-    /// <param name="length">periodo ilgis</param>
+    /**
+     * Leidžia papildyti kalsę
+     * @param price Kaina
+     * @param start periodo pradžia
+     * @param length periodo ilgis
+     */
     public void Insert(double price, int start, int length)
     {
         start = start - 1;
@@ -62,10 +66,10 @@ class Publication
             }
         }
     }
-    /// <summary>
-    /// Paima visą uždarbį
-    /// </summary>
-    /// <returns>visą uždarbį</returns>
+    /**
+     * Paima visą uždarbį
+     * @return visą uždarbį
+     */
     public double TakeGrossProfit()
     {
         double grossProfit = 0.0;
@@ -75,34 +79,31 @@ class Publication
         }
         return grossProfit;
     }
-    /// <summary>
-    /// Sukuria String eilutę
-    /// </summary>
-    /// <returns>String eilutę</returns>
+    /**
+     * Sukuria String eilutę
+     * @return String eilutę
+     */
     public String ToString()
     {
     String line;
     line = String.format("{0,-16}{1,6:f2}", name,TakeGrossProfit());
     return line;
     }
-    /// <summary>
-    /// Paima publikacijos pavadinimą
-    /// </summary>
-    /// <returns>publikacijos pavadinimas</returns>
+    /**
+     * Paima publikacijos pavadinimą
+     * @return publikacijos pavadinimas
+     */
     public String TakeName() { return name; }
     /// <summary>
     /// Paima mėnesio uždarbį
     /// </summary>
     /// <param name="i">mėnesio indeksas</param>
     /// <returns>mėnesio uždarbį</returns>
+
+    /**
+     * Paima mėnesio uždarbį
+     * @param i mėnesio indeksas
+     * @return mėnesio uždarbį
+     */
     public double TakeProfit(int i) { return profit[i]; }
-
-    public boolean Equals(Object obj)
-    {
-    /*return obj is Publication publication &&
-        name == publication.name &&
-        EqualityComparer<double[]>.Default.Equals(profit, publication.profit);*/
-        return false;
-    }
-
 }

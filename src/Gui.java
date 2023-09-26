@@ -3,29 +3,65 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Gui klasė kurioje dirbama su GUI
+ */
 public class Gui extends JFrame{
+    /**
+     * Pagrindine GUI panele
+     */
     private JPanel panelMain;
+    /**
+     * Slankiojimui reikalinga panele
+     */
     private JScrollPane scrollPane;
+    /**
+     * Ivedimo mygtukas
+     */
     private JButton inputButton;
+    /**
+     * Rykiavimo mygtukas
+     */
     private JButton sortButton;
+    /**
+     * Teksto laukas
+     */
     private JTextArea textArea;
+    /**
+     * Skaiciavimo mygtukas
+     */
     private JButton calculateButton;
 
-
+    /**
+     * Lenteles nr1 virsutine dalis
+     */
     final String virsus1 = "Pavardė     Adresas        Laikotarpio    Laikotarpio   Leidinio       Kaina\r\n" +
             "                                           Pradžia         Ilgis     Pavadinimas     Mėnesiui";
+    /**
+     * Lenteles nr2 virsutine dalis
+     */
     final String virsus2 = "Mėn.    Publikacija";
+    /**
+     * Lenteles nr3 virsutine dalis
+     */
     final String virsus3 = "Publikacija       Eurai";
+    /**
+     * Duomenu failo nuoroda
+     */
     static final File CFd = new File("@..\\..\\duomenys.txt");
-    public Gui(){
 
-        int month = 4;
-        String publication = "Zmones";
+    /**
+     * GUI klases konstruktorius/metodas
+     * @param month menesiai pagal paieska
+     * @param publication publikacija pagal paieska
+     */
+    public Gui(int month, String publication){
 
         String[] profitMonth = new String[10000];
-        String[] subscribers = new String[10000];
+        ArrayList subscribers = new ArrayList();
 
         ContainerSubscriptions contSubscrip = new ContainerSubscriptions();
         ContainerPublications contPubli = new ContainerPublications();
@@ -72,11 +108,12 @@ public class Gui extends JFrame{
         });
     }
 
-    /// <summary>
-    /// Nuskaitymo metodą
-    /// </summary>
-    /// <param name="file">Failas</param>
-    /// <param name="contSubs">Prenumeratų konteineris</param>
+    /**
+     * Nuskaitymo metodą
+     * @param file Failas
+     * @param contSubs Prenumeratų konteineris
+     * @throws FileNotFoundException Jei neegzistuoja failas ismeta exceptiona
+     */
     public void Read(File file, ContainerSubscriptions contSubs) throws FileNotFoundException {
         String line;
         String[] parts;
@@ -107,31 +144,29 @@ public class Gui extends JFrame{
         else textArea.setText("Nėra duomenų");
     }
 
-    /// <summary>
-    /// Sukuria prenumeratorių listą
-    /// </summary>
-    /// <param name="contSubs">prenumeratų konteineris</param>
-    /// <param name="publication">publikacija</param>
-    /// <param name="month">mėnesis</param>
-    /// <param name="subscribers">prenumeratriai</param>
-    public void FormSubscriberArray(ContainerSubscriptions contSubs, String publication, int month, String[] subscribers)
+    /**
+     * Sukuria prenumeratorių listą
+     * @param contSubs prenumeratų konteineris
+     * @param publication publikacija
+     * @param month mėnesis
+     * @param subscribers prenumeratriai
+     */
+    public void FormSubscriberArray(ContainerSubscriptions contSubs, String publication, int month, ArrayList subscribers)
     {
-        int index = 0;
         for(int i = 0; i < contSubs.Take(); i++)
         {
             if (contSubs.Take(i).Equals(publication, month))
             {
-                subscribers[index]=String.format(contSubs.Take(i).TakeLastName()+"   "+
-                        contSubs.Take(i).TakeAdress());
-                index++;
+                subscribers.add(String.format(contSubs.Take(i).TakeLastName()+"   "+
+                        contSubs.Take(i).TakeAdress()));
             }
         }
     }
-    /// <summary>
-    /// Sukuria konteinerį publikacijų mažiau už vidurkį
-    /// </summary>
-    /// <param name="contPubl">Publikacijų konteineris</param>
-    /// <param name="contPublNew">Naujas publikacijų konteineris</param>
+    /**
+     * Sukuria konteinerį publikacijų mažiau už vidurkį
+     * @param contPubl Publikacijų konteineris
+     * @param contPublNew Naujas publikacijų konteineris
+     */
     public void FormBelowAverage(ContainerPublications contPubl,
                                  ContainerPublications contPublNew)
     {
@@ -144,11 +179,11 @@ public class Gui extends JFrame{
             }
         }
     }
-    /// <summary>
-    /// Sukuria uždarbio listą
-    /// </summary>
-    /// <param name="contPubl">publikacijų konteineris</param>
-    /// <param name="profitMonth">Mėnesio uždarbis</param>
+    /**
+     * Sukuria uždarbio listą
+     * @param contPubl publikacijų konteineris
+     * @param profitMonth Mėnesio uždarbis
+     */
     public void FormProfitMonth(ContainerPublications contPubl, String[] profitMonth)
     {
         int max;
@@ -180,11 +215,11 @@ public class Gui extends JFrame{
             }
         }
     }
-    /// <summary>
-    /// Sutraukimo metodas
-    /// </summary>
-    /// <param name="contSubs">Prenumeratų konteineris</param>
-    /// <param name="contPubl">Publikacijų konteineris</param>
+    /**
+     * Sutraukimo metodas
+     * @param contSubs Prenumeratų konteineris
+     * @param contPubl Publikacijų konteineris
+     */
     public void Contraction(ContainerSubscriptions contSubs, ContainerPublications contPubl)
     {
         int poz;
@@ -215,11 +250,11 @@ public class Gui extends JFrame{
 
         }
     }
-    /// <summary>
-    /// Vidurkio metodas
-    /// </summary>
-    /// <param name="contPubl">Publikacijų konteineris</param>
-    /// <returns>vidurkį</returns>
+    /**
+     * Vidurkio metodas
+     * @param contPubl Publikacijų konteineris
+     * @return vidurkį
+     */
     public double Average(ContainerPublications contPubl)
     {
         double sum = 0.0;
@@ -229,11 +264,10 @@ public class Gui extends JFrame{
         }
         return sum/contPubl.Take();
     }
-    /// <summary>
-    /// Atspausdina originalų failą
-    /// </summary>
-    /// <param name="file">failas</param>
-    /// <param name="contSubs">Prenumeratų konteineris</param>
+    /**
+     * Atspausdina į GUI originalius duomenis
+     * @param contSubs Prenumeratų konteineris
+     */
     public void PrintOriginal(ContainerSubscriptions contSubs)
     {
         String strKiek = new String(new char[contSubs.Take(0).StringLenght() + 1]).replace('\0', '-');
@@ -248,35 +282,31 @@ public class Gui extends JFrame{
             textArea.append(strKiek+"\n");
         }
     }
-    /// <summary>
-    /// Atspausdiną duomenis pagal paiešką
-    /// </summary>
-    /// <param name="file">failas</param>
-    /// <param name="subscribers">Prenumeratoriai</param>
-    public void PrintSearchArray(String[] subscribers)
+    /**
+     *  Atspausdiną duomenis pagal paiešką
+     * @param subscribers Prenumeratoriai
+     */
+    public void PrintSearchArray(ArrayList subscribers)
     {
         textArea.setText("Paieškos rezultatai:\n");
-        if (subscribers.length == 0) textArea.append("Duomenų pagal paiešką nėra\n");
+        if (subscribers.size() == 0) textArea.append("Duomenų pagal paiešką nėra\n");
         else
         {
             textArea.append("-------------------\n");
             textArea.append("Pavardė     Adresas\n");
             textArea.append("-------------------\n");
-            for(int i = 0; i < subscribers.length; i++)
+            for(int i = 0; i < subscribers.size(); i++)
             {
-                if(subscribers[i]!=null) {
-                    textArea.append(String.format("%-19s\n", subscribers[i]));
-                }
+                textArea.append(String.format("%-19s\n", subscribers.get(i).toString()));
             }
             textArea.append("-------------------\n");
         }
 
     }
-    /// <summary>
-    /// Išpausdiną kuri prenumerata didžiausia tam tikrą mėnesį
-    /// </summary>
-    /// <param name="file">failas</param>
-    /// <param name="profitMonth">Mėnesių uždarbiai</param>
+    /**
+     * Išpausdiną kuri prenumerata turėjo didžiausia uždarbi tam tikrą mėnesį
+     * @param profitMonth Mėnesių uždarbiai
+     */
     public void PrintMaxMonth(String[] profitMonth)
     {
         String strKiek = "-".repeat(24);
@@ -291,11 +321,10 @@ public class Gui extends JFrame{
         textArea.append(strKiek+"\n");
 
     }
-    /// <summary>
-    /// Išpausdiną visą Publikacijų uždarbius
-    /// </summary>
-    /// <param name="file">failas</param>
-    /// <param name="contPubli">publikacijų konteineris</param>
+    /**
+     * Išpausdiną visą Publikacijų uždarbius
+     * @param contPubli publikacijų konteineris
+     */
     public void PrintGrossProfit(ContainerPublications contPubli)
     {
         String strKiek = "-".repeat(24);
@@ -310,11 +339,10 @@ public class Gui extends JFrame{
         textArea.append(strKiek+"\n");
 
     }
-    /// <summary>
-    /// Isspausdina visus mazesnius už vidurki
-    /// </summary>
-    /// <param name="file">failas</param>
-    /// <param name="contPubli">Publikaciju konteineris</param>
+    /**
+     * Isspausdina visus mazesnius už vidurki
+     * @param contPubli Publikaciju konteineris
+     */
     public void PrintBelowAverage(ContainerPublications contPubli)
     {
 
