@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -34,6 +35,7 @@ public class Gui extends JFrame{
      * Skaiciavimo mygtukas
      */
     private JButton calculateButton;
+    private JButton buttonPrint;
 
     /**
      * Lenteles nr1 virsutine dalis
@@ -83,9 +85,9 @@ public class Gui extends JFrame{
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
-                PrintOriginal(contSubscrip);
-                if (contSubscrip.Take() <= 0) { System.out.println("Nėra pradinių duomenų"); return; }
                 long endTime = System.currentTimeMillis();
+                if (contSubscrip.Take() <= 0) { System.out.println("Nėra pradinių duomenų"); return; }
+                else PrintOriginal(contSubscrip);
                 System.out.println("Įvedimo dalies laikas: "+(endTime-starTime));
             }
         });
@@ -93,10 +95,10 @@ public class Gui extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 long starTime = System.currentTimeMillis();
-                contPubli.Sort();
-                PrintGrossProfit(contPubli);
+                contSubscrip.Sort();
                 long endTime = System.currentTimeMillis();
-                System.out.println("Rikiavimo dalies laikas: "+(endTime-starTime));
+                PrintOriginal(contSubscrip);
+                System.out.println("Rikiavimo visu duomenu dalies laikas: "+(endTime-starTime));
             }
         });
         calculateButton.addActionListener(new ActionListener() {
@@ -105,21 +107,62 @@ public class Gui extends JFrame{
                 long startTime = System.currentTimeMillis();
                 FormSubscriberArray(contSubscrip, publication, month,  subscribers);
                 long endTimeSubs = System.currentTimeMillis();
+                long startTimeGet = System.currentTimeMillis();
+                TestRandomGet(contSubscrip);
+                long endTimeGet = System.currentTimeMillis();
+                System.out.println("Random 200 paemimo dalies laikas: "+(endTimeGet-startTimeGet));
+                long startTimeRemove = System.currentTimeMillis();
+                TestRandomRemove(contSubscrip);
+                long endTimeRemove = System.currentTimeMillis();
+                System.out.println("Random 200 panaikimo dalies laikas: "+(endTimeRemove-startTimeRemove));
                 Contraction(contSubscrip, contPubli);
                 FormProfitMonth(contPubli,  profitMonth);
                 FormBelowAverage(contPubli,  contPubliNew);
+                long endTime = System.currentTimeMillis();
+                System.out.println("Saraso formavimo dalies laikas: "+(endTimeSubs-startTime));
+                System.out.println("Skaičiavimo dalies laikas: "+(endTime-startTime));
+            }
+        });
+        buttonPrint.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 long startTimePrint = System.currentTimeMillis();
                 PrintSearchArray(subscribers);
                 PrintMaxMonth(profitMonth);
                 PrintGrossProfit(contPubli);
                 PrintBelowAverage(contPubliNew);
                 long endTimePrint = System.currentTimeMillis();
-                long endTime = System.currentTimeMillis();
-                System.out.println("Saraso formavimo dalies laikas: "+(endTimeSubs-startTime));
                 System.out.println("Spausdinimo dalies laikas: "+(endTimePrint-startTimePrint));
-                System.out.println("Skaičiavimo dalies laikas: "+(endTime-startTime));
             }
         });
+    }
+
+    public void TestRandomGet(ContainerSubscriptions contSubs){
+        Random randomInt = new Random();
+        int max = contSubs.Take();
+        int min = 0;
+        for(int i=0;i<600;i++){
+            int index = randomInt.nextInt(max - min + 1)+min;
+            Subscriptions sub = contSubs.Take(index);
+        }
+    }
+
+    public void TestRandomRemove(ContainerSubscriptions contSubs){
+        Random randomInt = new Random();
+        int max = contSubs.Take();
+        int min = 0;
+        for(int i=0;i<600;i++){
+            int index = randomInt.nextInt(max - min + 1)+min;
+            ContainerSubscriptions contSubsNew = new ContainerSubscriptions();
+            CopyContainer(contSubs,contSubsNew);
+            contSubsNew.Remove(index);
+
+        }
+    }
+    public void CopyContainer(ContainerSubscriptions contSubsOrg, ContainerSubscriptions contSubsNew){
+        for(int i=0;i<contSubsOrg.Take();i++){
+            contSubsNew.Insert(contSubsOrg.Take(i));
+        }
     }
 
     /**
@@ -140,19 +183,21 @@ public class Gui extends JFrame{
         Scanner scanner;
         if(file.exists()){
             scanner = new Scanner(file);
-            while(scanner.hasNext())
-            {
-                line = scanner.nextLine();
-                parts = line.split(";");
-                lastName = parts[0];
-                adress = parts[1];
-                periodStart = Integer.parseInt(parts[2]);
-                periodLength = Integer.parseInt(parts[3]);
-                subscName = parts[4];
-                priceMonth = Double.parseDouble(parts[5]);
-                Subscriptions subs = new Subscriptions();
-                subs.Insert(lastName, adress, periodStart, periodLength, subscName, priceMonth);
-                contSubs.Insert(subs);
+            if(!scanner.hasNext()) textArea.setText("Duomenų failas tuščias");
+            else {
+                while (scanner.hasNext()) {
+                    line = scanner.nextLine();
+                    parts = line.split(";");
+                    lastName = parts[0];
+                    adress = parts[1];
+                    periodStart = Integer.parseInt(parts[2]);
+                    periodLength = Integer.parseInt(parts[3]);
+                    subscName = parts[4];
+                    priceMonth = Double.parseDouble(parts[5]);
+                    Subscriptions subs = new Subscriptions();
+                    subs.Insert(lastName, adress, periodStart, periodLength, subscName, priceMonth);
+                    contSubs.Insert(subs);
+                }
             }
         }
         else textArea.setText("Nėra duomenų");
@@ -184,10 +229,10 @@ public class Gui extends JFrame{
     public void FormBelowAverage(ContainerPublications contPubl,
                                  ContainerPublications contPublNew)
     {
-        contPublNew = new ContainerPublications();
+        double average = Average(contPubl);
         for(int i = 0; i < contPubl.Take(); i++)
         {
-            if (contPubl.Take(i).TakeGrossProfit() < Average(contPubl))
+            if (contPubl.Take(i).TakeGrossProfit() < average)
             {
                 contPublNew.Insert(contPubl.Take(i));
             }

@@ -86,7 +86,7 @@ class Publication
     public String ToString()
     {
     String line;
-    line = String.format("{0,-16}{1,6:f2}", name,TakeGrossProfit());
+    line = String.format("%-16s %6.2f", name,TakeGrossProfit());
     return line;
     }
     /**
